@@ -1,0 +1,14 @@
+torch==2.1.1
+torchvision==0.16.1
+tensorflow==2.11.0
+tensorflow-probability==0.19.0
+tensorboard==2.11.0
+openai
+notebook
+jupyter
+plotly
+transforms3d
+open3d
+easydict
+numpy
+scipy

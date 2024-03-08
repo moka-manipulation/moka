@@ -1,0 +1,36 @@
+Describe the robot gripper's motion to solve the task by selecting pre-defined keypoints and waypoints.
+
+The input request contains:
+    - The task information as dictionaries. The dictionary contains these fields: 
+        * 'instruction': The task in natural language forms.
+        * 'object_grasped': The object that the robot gripper will hold in hand while executing the task.
+        * 'object_unattached': The object that the robot gripper will interact with either directly or via another object without holding it in hand. 
+        * 'motion_direction': The motion direction of the robot gripper or the in-hand object while performing the task.
+    - An image of the current table-top environment captured from a top-down camera, annotated with a set of visual marks:
+        * candidate keypoints on 'object_grasped': Red dots marked as 'P[i]' on the image, where [i] is an integer.
+        * candidate keypoints on 'object_unattached': Blue dots marked as 'Q[i]' on the image, where [i] is an integer.
+        * grid for waypoints: Grid lines that uniformly divide the images into tiles. The grid equally divides the image into columns marked as 'a', 'b', 'c', 'd', 'e' from left to right and rows marked as 1, 2, 3, 4, 5 from bottom to top. 
+
+The motion consists of an optional grasping phase and a manipulation phase, specified by 'grasp_keypoint', 'function_keypoint', 'target_keypoint', 'pre_contact_waypoint', 'post_contact_waypoint'. 
+
+Please note: In the grasping phase, the robot gripper grasps 'object_grasped' at the 'grasp_keypoint'. In the manipulation phase, the robot gripper sequentially moves the 'function_keypoint' to 'pre_contact_waypoint', 'target_keypoint', 'post_contact_waypoint', performing a motion trajectory specified by 'motion_direction' in the input request. 
+
+More specifically, the definitions of these points are:
+    - 'grasp_keypoint': The point on 'object_grasped' indicates the part where the robot gripper should hold.
+    - 'function_keypoint': The point on 'object_grasped' indicates the part that will make contact with 'object_unattached.'
+    - 'target_keypoint': If the task is pick-and-place, this is the location where object_grasped will be moved to. Otherwise, this is the point on 'object_unattached' indicating the part that will be contacted by 'function_keypoint', or the robot gripper (if 'function_keypoint' is ''). 
+    - 'pre_contact_waypoint': The waypoint in the free space that the functional point moves to before making contact with the 'target_keypoint', if 'object_unattached' is not ''. Otherwise, this will be the waypoint that the functional point moves to after grasping 'object_grasped'. 
+    - 'post_contact_waypoint': The waypoint in the free space that the functional point moves to after making contact with the 'target_keypoint', if 'object_unattached' is not ''. Otherwise, this will be ''. 
+
+The response should be a dictionary in JSON form, which contains:
+    - 'grasp_keypoint': Selected from candidate keypoints marked as 'P[i]' on the image. This will be '' if and only if 'object_grasped' is ''.
+    - 'function_keypoint': Selected from candidate keypoints marked as 'P[i]' on the image. This will be '' if and only if 'object_grasped' or 'object_unattached' is '' or the task is pick-and-place.
+    - 'target_keypoint': Selected from keypoint candidates marked as 'Q[i]' on the image. This will be '' if and only if 'object_unattached' is ''. 
+    - 'target_tile': The tile where 'target_keypoint' is currently located in. This is selected from candidate tiles '[x][i]' marked on the image, where [x] is the column index as a lower letter and [i] is the row index as an integer.
+    - 'pre_contact_tile': The tile where 'pre_contact_waypoint' should be in. This is selected from candidate tiles '[x][i]' marked on the image, where [x] is the column index as a lower letter and [i] is the row index as an integer.
+    - 'post_contact_tile': The tile where 'post_contact_waypoint' should be in. This is selected from candidate tiles '[x][i]' marked on the image, where [x] is the column index as a lower letter and [i] is the row index as an integer.
+    - 'pre_contact_height': The height of 'pre_contact_waypoint' as one of the two options 'same' (same as the height of making contact with 'target_keypoint') or 'above' (higher than the height of making contact with 'target_keypoint'). 
+    - 'post_contact_height': The height of 'post_contact_waypoint' as one of the two options 'same' (same as the height of making contact with 'target_keypoint') or 'above' (higher than the height of making contact with 'target_keypoint').
+    - 'target_angle': Describe how the object should be oriented during this motion in terms of the axis pointing from the grasping point to the function point. Think about this step by step. First analyze whether this axis should be parallel with or perpendicular to the motion direction and the table surface respectively to better perform the task, then choose the axis orientation from one of these strings based on the motion direction: 'forward' (toward the top side of the image), 'backward' (toward the bottom side of the image), 'upward' (perpendicular to and away from the table surface), 'downward' (perpendicular to and towards the table surface), 'left' (towards the left side of the image), 'right' (towards the right side of the image). e.g., if the axis is parallel to the table surface and perpendicular to the motion direction, and the motion direction is backward, then the axis direction should be either 'left' or 'right'; if the axis is perpendicular to the table surface and parallel to the motion direction, and the motion direction is upward, then the axis direction should be either 'upward' or 'downward'.
+
+Think about this step by step: First, choose 'grasp_keypoint', 'function_keypoint', and 'target_keypoint' on the correct parts of the objects. Next, describe which tile 'target_keypoint' is located in ('target_tile'). Then choose 'pre_contact_tile', 'post_contact_tile', 'pre_contact_height', 'post_contact_height' accordingly such that the resultant motion of 'pre_contact_waypoint'-> 'target_keypoint' -> 'post_contact_waypoint' in 3D follows the input 'motion_direction' and proper contacts will be made. Remember that the columns are marked as 'a', 'b', 'c', 'd', 'e' from left to right, and the rows are marked as 1, 2, 3, 4, 5 from bottom to top. Explain the reasoning steps.

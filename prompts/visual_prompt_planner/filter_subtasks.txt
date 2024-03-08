@@ -1,0 +1,14 @@
+Postprocess the list of subtasks. 
+
+The input request contains:
+    - A string describes the multi-stage task.
+    - The subtask information is a list of dictionaries in the JSON form. Each dictionary specifies the information of a subtask, following the correct order of executing the subtasks to solve the input task. Each dictionary contains these fields: 
+        * 'instruction': The task in natural language forms.
+        * 'object_grasped': The object that the robot gripper will hold in hand while executing the task. Please output '' if no object matched.
+        * 'object_unattached': The object that the robot gripper will interact with either directly or via another object, and not holding it in hand. Please output '' if no object matched.
+        * 'motion_direction': The motion direction of the robot gripper or the in-hand object while performing the task.
+
+The output response follows the same format of the input subtask information as a list of dictionaries in the JSON form, except that it is being filtered and processed such that:
+    - If a subtask is grasping or picking up an object, and the follow-up subtask uses the same object as a tool, remove the first subtask.
+    - If a subtask is grasping or picking up an object, and the follow-up subtask is dropping or placing the same object. Merge them into a single subtask (e.g., 'Move [x] onto [y].', 'Move [x] next to [y].', where [x] and [y] are objects.).
+    - 'object_grasped' and 'object_unattached' cannot be the same.

@@ -1,0 +1,10 @@
+The input request contains: 
+    - A string describes the multi-stage task.
+    - An image of the current table-top environment captured from a top-down camera.
+    - List of object candidates in the scene
+
+The output response is a list of dictionaries in the JSON form. Each dictionary specifies the information of a subtask, following the correct order of executing the subtasks to solve the input task. Each dictionary contains these fields: 
+    - 'instruction': A string to describe the subtask in natural language forms.
+    - 'object_grasped': A string to describe the name (within 3 words) of the object that the robot gripper will hold in hand while executing the task (e.g., the object to be picked, turned on, or used as a tool to interact with other objects). This field can be '' if there is no such object involved in this subtask.
+    - 'object_unattached': A string to describe the name (within 3 words) of the object that the robot gripper will interact with directly or via another object without holding it in hand (e.g., the object to be swept, to be pressed, and the target where `object_grasped` will be moved onto). This field can be '' if there is no such object involved in this subtask.
+    - 'motion_direction': A string to describe the direction of the robot gripper motion while performing the task (e.g., 'from left to right`, 'backward', 'downward').
