@@ -4,10 +4,10 @@ import numpy as np
 import matplotlib.pyplot as plt  # NOQA
 # from scipy import ndimage
 
-from cvp.vision import depth_utils
-from cvp.vision import visualization_utils  # NOQA
-from cvp.vision.grasp_utils import Grasp2D
-from cvp.vision.grasp_utils import AntipodalDepthImageGraspSampler
+from moka.vision import depth_utils
+from moka.vision import visualization_utils  # NOQA
+from moka.vision.grasp_utils import Grasp2D
+from moka.vision.grasp_utils import AntipodalDepthImageGraspSampler
 
 
 def visualize_context(obs, context, camera_params):

@@ -8,18 +8,18 @@ import numpy as np  # noqa
 import json
 from PIL import Image
 
-from cvp.planners.visual_prompt_utils import (
+from moka.planners.visual_prompt_utils import (
     annotate_visual_prompts,
     annotate_motion,
     propose_candidate_keypoints,
     request_motion,
     request_plan,
 )
-from cvp.planners.planner import Planner
-from cvp.vision import visualization_utils  # NOQA
-from cvp.vision.grasp_utils import Grasp2D
-from cvp.vision.segmentation import get_segmentation_masks
-from cvp.vision.segmentation import get_scene_object_bboxes
+from moka.planners.planner import Planner
+from moka.vision import visualization_utils  # NOQA
+from moka.vision.grasp_utils import Grasp2D
+from moka.vision.segmentation import get_segmentation_masks
+from moka.vision.segmentation import get_scene_object_bboxes
 
 
 pp = pprint.PrettyPrinter(indent=4)

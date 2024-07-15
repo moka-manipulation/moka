@@ -1,14 +1,18 @@
 import os  # NOQA
 from absl import app, flags, logging  # NOQA
 
-os.environ['OPENAI_API_KEY'] = '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'  # Personal  # NOQA
+# get the openai environment key
+import openai  # NOQA
+api_key = os.getenv("OPENAI_API_KEY")
+if api_key is None:
+    raise ValueError("OPENAI_API_KEY is not set.")
+openai.api_key = api_key
 
 import matplotlib.pyplot as plt  # NOQA
 # plt.switch_backend('agg')  # To avoid the runtime error.
 
-from r2d2.robot_env import RobotEnv  # NOQA
+from droid.robot_env import RobotEnv  # NOQA
 from moka.drivers.driver import Driver  # NOQA
-from moka.planners.mouse_click_planner import MouseClickPlanner  # NOQA
 from moka.planners.visual_prompt_planner import VisualPromptPlanner  # NOQA
 from moka.policies.franka_policy import FrankaMarkPolicy  # NOQA
 from moka.utils.config_utils import load_config  # NOQA

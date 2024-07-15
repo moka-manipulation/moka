@@ -1,0 +1,85 @@
+max_tasks: 50
+max_subtasks: 2
+# max_subtasks: 3 
+max_subtask_steps: 150
+
+prompt_root_dir: './prompts'
+prompt_name: 'visual_prompt_planner'
+log_dir: './logs'
+# log_dir: './incontext/'
+
+# Number of candidate keypoints on each object.
+num_candidate_keypoints: 6
+
+plan_with_obs_image: true
+
+# The grid size for sampling waypoints.
+waypoint_grid_size: [5, 5]
+
+camera:
+  wrist:
+    serial_number: '24259877'  # Camera wrist serial number
+    view: 'left'  # Camera wrist
+    crop: [0, 400, 720, 1280]  # Camera wrist crop
+
+  primary:
+    serial_number: '24259877'  # Camera 1 serial number
+    view: 'right'  # Camera 1
+    crop: [325, 0, 700, 765]  # Camera 1 crop
+
+  secondary:
+    serial_number: '20521388'  # Camera 2
+    view: 'left'  # Camera 2
+    crop: [0, 350, 500, 850]  # Camera 2
+
+  planner:
+    serial_number: '20521388'  # Camera 2
+    view: 'left'  # Camera 2
+    crop: [0, 350, 500, 920]
+
+  depth:
+    average_across_n_frames: 1
+    grad_gaussian_sigma: 1
+
+
+grasp_sampler:
+  num_samples: 50
+  crop: [50, 350, 500, 870]  # Camera 2
+  max_dist_from_keypoint: 80
+
+
+motion:
+
+  # contact:
+  #   above_z_offset:
+
+  # Maximum velosity.
+  high_vel: 0.05
+  low_vel: 0.02
+
+  # Maximum angular velosity.
+  # max_angvel: 0.3
+  max_angvel: 0.2
+
+  target_pos_thresh: 0.01
+
+  # The height offset to perform the grasping
+  grasp_z_offset: 0.01
+  gripper_xy_offset: [0.045, -0.015]
+
+  # The safe height to move across the table without collisions.
+  safe_z: 0.25
+
+  # Table height, the minimal height
+  min_z: 0.12
+
+  release_z_offset: 0.03
+
+  # The height to perform the planar motion.
+  # MOTION_Z: 0.08
+
+  grip_timeout: 15
+
+  grip_open_thresh: 0.3
+
+  grip_close_thresh: 0.9

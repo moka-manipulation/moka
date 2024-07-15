@@ -1,5 +1,5 @@
 import numpy as np
-from r2d2.misc.transformations import euler_to_rmat
+from moka.utils.transformations import euler_to_rmat
 
 
 def transform_gripper_position(

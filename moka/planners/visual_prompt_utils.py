@@ -7,11 +7,11 @@ from PIL import Image
 import io
 import traceback
 import json
-from cvp.vision.keypoint import get_keypoints_from_segmentation
-# from cvp.vision.segmentation import get_segmentation_masks
-# from cvp.vision.segmentation import get_object_bboxes
-from cvp.gpt_utils import request_gpt
-from cvp.gpt_utils import request_gpt_incontext
+from moka.vision.keypoint import get_keypoints_from_segmentation
+# from moka.vision.segmentation import get_segmentation_masks
+# from moka.vision.segmentation import get_object_bboxes
+from moka.gpt_utils import request_gpt
+from moka.gpt_utils import request_gpt_incontext
 from openai import OpenAI
 client = OpenAI()
 
@@ -273,14 +273,14 @@ def request_motion(  # NOQA
         # if True:
         log_img = annotate_motion(obs_image_reshaped, context,
                                   add_caption=add_caption)
-
         if log_dir is not None:
             log_img.save(os.path.join(log_dir, f'motion{suffix}.png'))
+            out_file = open(os.path.join(log_dir, f'context{suffix}.json'), 'w')
+            json.dump(context_json, out_file)
 
-        out_file = open(os.path.join(log_dir, f'context{suffix}.json'), 'w')
-        json.dump(context_json, out_file)
-
-    return context, context_json, log_img
+        return context, context_json, log_img
+    else:
+        return context, context_json, None
 
 
 def propose_candidate_keypoints(subtask, segmasks, num_samples):

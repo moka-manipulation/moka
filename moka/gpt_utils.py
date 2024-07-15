@@ -14,7 +14,7 @@ headers = {
 }
 
 DEFAULT_LLM_MODEL_NAME = 'gpt-4'
-DEFAULT_VLM_MODEL_NAME = 'gpt-4-vision-preview'
+DEFAULT_VLM_MODEL_NAME = 'gpt-4o'
 
 
 def encode_image_from_file(image_path):

@@ -9,14 +9,14 @@ import matplotlib.pyplot as plt  # NOQA
 from matplotlib import widgets  # NOQA
 from scipy import ndimage
 
-from r2d2.misc.time import time_ms
-from r2d2.misc.parameters import (
+from droid.misc.time import time_ms
+from droid.misc.parameters import (
     moka_version,
     robot_serial_number,
     robot_type,
 )
 from moka.vision import depth_utils
-from r2d2.trajectory_utils.trajectory_writer import TrajectoryWriter
+from droid.trajectory_utils.trajectory_writer import TrajectoryWriter
 
 # Prepare Data Folder #
 dir_path = os.path.dirname(os.path.realpath(__file__))
