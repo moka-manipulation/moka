@@ -340,7 +340,7 @@ def plot_keypoints(
     if keypoints is None:
         return
 
-    (h, w) = image_size
+    (w, h) = image_size
     for i, keypoint in enumerate(keypoints):
         if keypoint is None:
             continue
@@ -370,12 +370,20 @@ def annotate_candidate_keypoints(
         image,
         candidate_keypoints,
 ):
-    fig, ax = plt.subplots(1, 1)
-    ax.imshow(image)
-    ax.axis('off')
+    dpi = 100
+    w, h = image.size  # Calculate the figure size to match the input resolution
+    fig = plt.figure(figsize=(w/dpi, h/dpi), dpi=dpi, frameon=False)  # Create a figure with no frame
+    ax = fig.add_subplot(111)  # Add a subplot that fully fills the figure
+    fig.subplots_adjust(left=0, right=1, top=1, bottom=0, wspace=0, hspace=0)  # Remove all margins and spacing
+    ax.imshow(image, extent=(0, w, h, 0))  # Use tuple format
+    ax.axis('off')  # Turn off the axis
+
+    ax.set_xlim(0, w)  # Strictly set the x-axis range to ensure no margins
+    ax.set_ylim(h, 0)  # Strictly set the y-axis range to ensure no margins
+    ax.margins(0)  # Disable all margins
+    ax.set_aspect('equal')  # Maintain equal aspect ratio
 
     image_size = image.size[:2]
-    print('image_size (annotate_candidate_keypoints)', image_size)
 
     if candidate_keypoints['grasped'] is not None:
         plot_keypoints(
@@ -386,8 +394,9 @@ def annotate_candidate_keypoints(
             ax, image_size, candidate_keypoints['unattached'], 'b', prefix='Q')
 
     buf = io.BytesIO()
-    fig.savefig(buf, transparent=True, bbox_inches='tight',
-                pad_inches=0, format='jpg')
+    fig.savefig(buf, transparent=True, pad_inches=0,  # Save the figure with strict parameters to ensure no margins
+                bbox_inches=None, format='jpg', dpi=dpi,
+                facecolor='none', edgecolor='none')
     buf.seek(0)
     # close the figure to prevent it from being displayed
     plt.close(fig)
@@ -395,9 +404,18 @@ def annotate_candidate_keypoints(
 
 
 def annotate_grid(image, grid_size):
-    fig, ax = plt.subplots(1, 1)
-    ax.imshow(image)
-    ax.axis('off')
+    dpi = 100  # Fixed DPI value
+    w, h = image.size  # Calculate the figure size to match the input resolution
+    fig = plt.figure(figsize=(w/dpi, h/dpi), dpi=dpi, frameon=False)  # Create a figure with no frame
+    ax = fig.add_subplot(111)  # Add a subplot that fully fills the figure
+    fig.subplots_adjust(left=0, right=1, top=1, bottom=0, wspace=0, hspace=0)  # Remove all margins and spacing
+    ax.imshow(image, extent=(0, w, h, 0))  # Use tuple format
+    ax.axis('off')  # Turn off the axis
+
+    ax.set_xlim(0, w)  # Strictly set the x-axis range to ensure no margins
+    ax.set_ylim(h, 0)  # Strictly set the y-axis range to ensure no margins
+    ax.margins(0)  # Disable all margins
+    ax.set_aspect('equal')  # Maintain equal aspect ratio
 
     image_size = image.size[:2]
     (w, h) = image_size
@@ -425,16 +443,17 @@ def annotate_grid(image, grid_size):
     for i in range(0, grid_size[0]):
         for j in range(0, grid_size[1]):
             ax.annotate(str(f"{ascii_lowercase[i]}{grid_size[1] - j}"),
-                        [w * (i + 0.5) / grid_size[0], h *
-                         (j + 0.5) / grid_size[1]],
-                        [w * (i + 0.5) / grid_size[0], h *
-                         (j + 0.5) / grid_size[1]],
+                        (w * (i + 0.5) / grid_size[0], h *
+                         (j + 0.5) / grid_size[1]),
+                        (w * (i + 0.5) / grid_size[0], h *
+                         (j + 0.5) / grid_size[1]),
                         size=10,
                         color='white')
 
     buf = io.BytesIO()
-    fig.savefig(buf, transparent=True, bbox_inches='tight',
-                pad_inches=0, format='jpg')
+    fig.savefig(buf, transparent=True, pad_inches=0,  # Save the figure with strict parameters to ensure no margins
+                bbox_inches=None, format='jpg', dpi=dpi,
+                facecolor='none', edgecolor='none')
     buf.seek(0)
     # close the figure to prevent it from being displayed
     plt.close(fig)
@@ -505,9 +524,18 @@ def plot_smooth_curve(ax, points):
 
 
 def annotate_motion(image, context, log_dir=None, add_caption=True):
-    fig, ax = plt.subplots(1, 1)
-    ax.imshow(image)
-    ax.axis('off')
+    dpi = 100  # Fixed DPI value
+    w, h = image.size  # Calculate the figure size to match the input resolution
+    fig = plt.figure(figsize=(w/dpi, h/dpi), dpi=dpi, frameon=False)  # Create a figure with no frame
+    ax = fig.add_subplot(111)  # Add a subplot that fully fills the figure
+    fig.subplots_adjust(left=0, right=1, top=1, bottom=0, wspace=0, hspace=0)  # Remove all margins and spacing
+    ax.imshow(image, extent=(0, w, h, 0))  # Use tuple format
+    ax.axis('off')  # Turn off the axis
+
+    ax.set_xlim(0, w)  # Strictly set the x-axis range to ensure no margins
+    ax.set_ylim(h, 0)  # Strictly set the y-axis range to ensure no margins
+    ax.margins(0)  # Disable all margins
+    ax.set_aspect('equal')  # Maintain equal aspect ratio
 
     image_size = image.size[:2]
 
@@ -530,6 +558,7 @@ def annotate_motion(image, context, log_dir=None, add_caption=True):
         ax, image_size, [pre_contact_waypoint], 'cyan', 'waypoint 0', False,
         add_caption=add_caption)
     plot_keypoints(
+        
         ax, image_size, [post_contact_waypoint], 'cyan', 'waypoint 1', False,
         add_caption=add_caption)
 
@@ -556,8 +585,9 @@ def annotate_motion(image, context, log_dir=None, add_caption=True):
 
     plt.show()
     buf = io.BytesIO()
-    fig.savefig(buf, transparent=True, bbox_inches='tight',
-                pad_inches=0, format='jpg')
+    fig.savefig(buf, transparent=True, pad_inches=0,  # Save the figure with strict parameters to ensure no margins
+                bbox_inches=None, format='jpg', dpi=dpi,
+                facecolor='none', edgecolor='none')
     buf.seek(0)
     # close the figure to prevent it from being displayed
     plt.close(fig)
